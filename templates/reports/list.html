@@ -1,9 +1,9 @@
+
 {% extends "base.html" %}
 
 {% block content %}
 <div class="container">
     <h2>📊 Доступные отчёты</h2>
-    <p>{% reports %}</p>>
     {% if reports %}
         <ul class="list-group">
             {% for report in reports %}
@@ -12,12 +12,18 @@
                         <strong>{{ report.name }}</strong> ({{ report.client }})
                         <span class="badge bg-secondary">{{ report.date }}</span>
                     </div>
-                    <a href="{{ url_for('reports.edit_report', client_login=report.client, report_name=report.name) }}" class="btn btn-info btn-sm">📂 Открыть</a>
+                    <div class="d-flex gap-2">
+                        <form method="POST" action="{{ url_for('reports.run_report', client_login=report.client, report_name=report.name) }}">
+                            <button type="submit" class="btn btn-success btn-sm">🚀 Запустить</button>
+                        </form>
+                        <a href="{{ url_for('reports.report_queue') }}" class="btn btn-secondary btn-sm">📜 Очередь</a>
+                        <a href="{{ url_for('reports.edit_report', client_login=report.client, report_name=report.name) }}" class="btn btn-info btn-sm">📂 Открыть</a>
+                    </div>
                 </li>
             {% endfor %}
         </ul>
     {% else %}
-        <p class="text-muted">Нет доступных отчётов.</p>
+        <p class="text-muted">Нет доступных отчётов</p>
     {% endif %}
 </div>
 {% endblock %}
