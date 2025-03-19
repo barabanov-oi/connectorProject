@@ -35,4 +35,4 @@ if __name__ == '__main__':
     app.register_blueprint(reports_bp)  # ✅ Регистрируем Blueprint
     app.jinja_env.filters['datetimeformat'] = datetimeformat # Регистрируем фильтр в Jinja
     app.jinja_env.filters['periodformat'] = periodformat
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=8080, debug=True)

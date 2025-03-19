@@ -2,3 +2,14 @@ modules = ["python-3.12", "web", "nodejs-20"]
 
 [nix]
 channel = "stable-24_05"
+
+[workflows]
+
+[[workflows.workflow]]
+name = "Run"
+author = 40663983
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python app.py"
