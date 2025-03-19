@@ -1,77 +1,93 @@
+
 {% extends "base.html" %}
 
 {% block content %}
 <div class="container">
-    <h2 class="mt-4">Список коннекторов</h2>
-    <a href="{{ url_for('connectors.add_connector') }}" class="btn btn-primary mb-3">➕ Добавить коннектор</a>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>📋 Список коннекторов</h2>
+        <a href="{{ url_for('connectors.add_connector') }}" class="btn btn-primary">
+            ➕ Добавить коннектор
+        </a>
+    </div>
 
-    <div class="row">
-        <!-- Блок "Чтение" -->
+    <div class="row g-4">
         <div class="col-md-6">
-            <h3 class="mt-4">📖 Коннекторы "Чтение"</h3>
-            <ul class="list-group">
-                {% if reading_connectors %}
-                    {% for connector in reading_connectors %}
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <div>
-                                <strong>{{ connector.name }}</strong>
-                                <span class="badge bg-info">{{ connector.service }}</span>
-                            </div>
-                        </li>
-                    {% endfor %}
-                {% else %}
-                    <li class="list-group-item text-muted">Нет доступных коннекторов</li>
-                {% endif %}
-            </ul>
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h3 class="card-title">📖 Коннекторы "Чтение"</h3>
+                    <div class="list-group mt-3">
+                        {% if reading_connectors %}
+                            {% for connector in reading_connectors %}
+                                <div class="list-group-item">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <strong>{{ connector.name }}</strong>
+                                            <span class="badge bg-info ms-2">{{ connector.service }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="list-group-item text-muted">Нет доступных коннекторов</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!-- Блок "Запись" -->
         <div class="col-md-6">
-            <h3 class="mt-4">✍️ Коннекторы "Запись"</h3>
-            <ul class="list-group">
-                {% if writing_connectors %}
-                    {% for connector in writing_connectors %}
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <div>
-                                <strong>{{ connector.name }}</strong>
-                                <span class="badge bg-success">{{ connector.service }}</span>
-                            </div>
-                        </li>
-                    {% endfor %}
-                {% else %}
-                    <li class="list-group-item text-muted">Нет доступных коннекторов</li>
-                {% endif %}
-            </ul>
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h3 class="card-title">✍️ Коннекторы "Запись"</h3>
+                    <div class="list-group mt-3">
+                        {% if writing_connectors %}
+                            {% for connector in writing_connectors %}
+                                <div class="list-group-item">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <strong>{{ connector.name }}</strong>
+                                            <span class="badge bg-success ms-2">{{ connector.service }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="list-group-item text-muted">Нет доступных коннекторов</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Блок с отчётами -->
-    <div class="mt-5">
-        <h3>📊 Доступные отчёты</h3>
-        <ul class="list-group">
-            {% if reports %}
-                {% for report in reports %}
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <div>
-                            <strong>{{ report.name }}</strong>
-                            <span class="badge bg-secondary">{{ report.date or "Дата не указана" }}</span>
+    <div class="card shadow-sm mt-5">
+        <div class="card-body">
+            <h3 class="card-title">📊 Доступные отчёты</h3>
+            <div class="list-group mt-3">
+                {% if reports %}
+                    {% for report in reports %}
+                        <div class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>{{ report.name }}</strong>
+                                    <span class="badge bg-secondary ms-2">{{ report.date or "Дата не указана" }}</span>
+                                </div>
+                                <div class="d-flex gap-2">
+                                    <form method="POST" action="{{ url_for('reports.run_report', client_login=report.client, report_name=report.name) }}">
+                                        <button type="submit" class="btn btn-success btn-sm">🚀 Запустить</button>
+                                    </form>
+                                    <a href="{{ url_for('reports.report_queue') }}" class="btn btn-secondary btn-sm">📜 Очередь</a>
+                                    <a href="{{ url_for('reports.edit_report', client_login=report['client'], report_name=report['name']) }}" 
+                                       class="btn btn-primary btn-sm">📂 Открыть</a>
+                                </div>
+                            </div>
                         </div>
-                        <div class="d-flex gap-2">
-                            <!-- Кнопка запуска отчёта -->
-                            <form method="POST" action="{{ url_for('reports.run_report', client_login=report.client, report_name=report.name) }}">
-                                <button type="submit" class="btn btn-success btn-sm">🚀 Запустить</button>
-                            </form>
-                            <a href="{{ url_for('reports.report_queue') }}" class="btn btn-secondary btn-sm">📜 Очередь</a>
-                            <!-- Кнопка открытия отчёта -->
-                            <a href="{{ url_for('reports.edit_report', client_login=report['client'], report_name=report['name']) }}">
-                                📂 Открыть</a>
-                        </div>
-                    </li>
-                {% endfor %}
-            {% else %}
-                <li class="list-group-item text-muted">Нет доступных отчётов</li>
-            {% endif %}
-        </ul>
+                    {% endfor %}
+                {% else %}
+                    <div class="list-group-item text-muted">Нет доступных отчётов</div>
+                {% endif %}
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

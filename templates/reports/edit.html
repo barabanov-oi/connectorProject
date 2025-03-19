@@ -1,15 +1,23 @@
+
 {% extends "base.html" %}
 
 {% block content %}
 <div class="container">
-    <h2 class="mt-4">Редактирование отчета: {{ report_name }}</h2>
-    <textarea id="jsonEditor" class="form-control" rows="15">{{ report_json }}</textarea>
-
-    <div class="mt-3">
-        <button class="btn btn-success" onclick="saveReport()">💾 Сохранить</button>
-        <a href="{{ url_for('reports.run_report', client_login=client_login, report_name=report_name) }}" class="btn btn-primary">🚀 Запустить отчет</a>
+    <h2 class="mt-4 mb-4">📝 Редактирование отчета: {{ report_name }}</h2>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <textarea id="jsonEditor" class="form-control mb-4" rows="15">{{ report_json }}</textarea>
+            <div class="d-flex gap-2">
+                <button class="btn btn-primary" onclick="saveReport()">
+                    💾 Сохранить
+                </button>
+                <a href="{{ url_for('reports.run_report', client_login=client_login, report_name=report_name) }}" 
+                   class="btn btn-success">
+                    🚀 Запустить отчет
+                </a>
+            </div>
+        </div>
     </div>
-
     <div id="statusMessage" class="mt-3"></div>
 </div>
 
@@ -19,7 +27,7 @@ function saveReport() {
     let jsonData;
 
     try {
-        jsonData = JSON.parse(jsonText);  // Проверяем JSON
+        jsonData = JSON.parse(jsonText);
     } catch (error) {
         alert("❌ Ошибка: некорректный JSON!");
         return;
@@ -32,10 +40,12 @@ function saveReport() {
     })
     .then(response => response.json())
     .then(data => {
-        document.getElementById("statusMessage").innerHTML = `<div class="alert alert-success">${data.message}</div>`;
+        document.getElementById("statusMessage").innerHTML = 
+            `<div class="alert alert-success">✅ ${data.message}</div>`;
     })
     .catch(error => {
-        document.getElementById("statusMessage").innerHTML = `<div class="alert alert-danger">Ошибка сохранения</div>`;
+        document.getElementById("statusMessage").innerHTML = 
+            `<div class="alert alert-danger">❌ Ошибка при сохранении</div>`;
     });
 }
 </script>
