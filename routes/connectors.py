@@ -16,7 +16,8 @@ os.makedirs(GOOGLE_CREDENTIALS_PATH, exist_ok=True)  # Создаем папку
 @connectors_bp.route('/connectors', methods=['GET'])
 def list_connectors():
     """Список всех доступных коннекторов (группируем по типу read/write)."""
-    config_path = "services\\connectors\\config"
+    config_path = "services/connectors/config"
+    os.makedirs(config_path, exist_ok=True)  # Create directory if it doesn't exist
 
     # ✅ Оставляем только JSON-файлы
     connector_files = [f for f in os.listdir(config_path) if f.endswith(".json")]

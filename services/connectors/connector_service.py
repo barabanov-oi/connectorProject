@@ -3,6 +3,7 @@ import os
 
 CONNECTOR_CONFIG_PATH = "services/connectors/config"
 CONNECTORS_PATH = "services/connectors/config"
+os.makedirs(CONNECTOR_CONFIG_PATH, exist_ok=True)  # Create directory if it doesn't exist
 
 
 def save_connector_config(client_login, config_data):
