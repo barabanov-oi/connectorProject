@@ -1,58 +1,183 @@
+
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container">
-    <h2 class="mt-4">Добавить коннектор</h2>
-    <form method="POST" enctype="multipart/form-data">
-        <div class="mb-3">
-            <label for="connector_name" class="form-label">Название коннектора</label>
-            <input type="text" class="form-control" id="connector_name" name="connector_name" required>
+<div class="page-container">
+    <div class="page-header">
+        <div class="header-content">
+            <h1>Новый коннектор</h1>
+            <p class="text-muted">Настройте подключение к источнику данных</p>
         </div>
+    </div>
 
-        <!-- Выбор типа коннектора -->
-        <div class="mb-3">
-            <label for="connector_type" class="form-label">Тип коннектора</label>
-            <select class="form-control" id="connector_type" name="connector_type" required onchange="updateTemplates()">
-                <option value="Чтение">Чтение</option>
-                <option value="Запись">Запись</option>
-            </select>
-        </div>
+    <div class="form-card">
+        <form method="POST" enctype="multipart/form-data" class="connector-form">
+            <div class="form-section">
+                <h3>Основные настройки</h3>
+                <div class="form-group">
+                    <label for="connector_name">Название коннектора</label>
+                    <input type="text" class="form-control" id="connector_name" name="connector_name" required>
+                    <small class="form-text text-muted">Укажите понятное название для идентификации коннектора</small>
+                </div>
 
-        <!-- Выбор шаблона -->
-        <div class="mb-3">
-            <label for="connector_template" class="form-label">Шаблон коннектора</label>
-            <select class="form-control" id="connector_template" name="connector_template" required onchange="updateFields()">
-                <!-- Заполняется через JS -->
-            </select>
-        </div>
+                <div class="form-group">
+                    <label for="connector_type">Тип коннектора</label>
+                    <select class="form-control" id="connector_type" name="connector_type" required onchange="updateTemplates()">
+                        <option value="Чтение">📥 Чтение данных</option>
+                        <option value="Запись">📤 Запись данных</option>
+                    </select>
+                    <small class="form-text text-muted">Выберите назначение коннектора</small>
+                </div>
 
-        <!-- Поля для Яндекс.Директа -->
-        <div id="yandex_fields" style="display: none;">
-            <div class="mb-3">
-                <label for="yandex_oauth_token" class="form-label">OAuth-токен Яндекс.Директ</label>
-                <input type="text" class="form-control" id="yandex_oauth_token" name="yandex_oauth_token">
+                <div class="form-group">
+                    <label for="connector_template">Шаблон коннектора</label>
+                    <select class="form-control" id="connector_template" name="connector_template" required onchange="updateFields()">
+                        <!-- Заполняется через JS -->
+                    </select>
+                    <small class="form-text text-muted">Выберите сервис для подключения</small>
+                </div>
             </div>
-            <div class="mb-3">
-                <label for="client_login" class="form-label">Client Login</label>
-                <input type="text" class="form-control" id="client_login" name="client_login">
-            </div>
-        </div>
 
-        <!-- Поля для Google Sheets -->
-        <div id="google_fields" style="display: none;">
-            <div class="mb-3">
-                <label for="service_account" class="form-label">Service Account</label>
-                <input type="text" class="form-control" id="service_account" name="service_account">
+            <!-- Яндекс.Директ поля -->
+            <div id="yandex_fields" class="form-section" style="display: none;">
+                <h3>Настройки Яндекс.Директ</h3>
+                <div class="form-group">
+                    <label for="yandex_oauth_token">OAuth Token</label>
+                    <input type="text" class="form-control" id="yandex_oauth_token" name="yandex_oauth_token">
+                    <small class="form-text text-muted">Токен доступа к API Яндекс.Директ</small>
+                </div>
+                <div class="form-group">
+                    <label for="client_login">Логин клиента</label>
+                    <input type="text" class="form-control" id="client_login" name="client_login">
+                    <small class="form-text text-muted">Логин клиента в Яндекс.Директ</small>
+                </div>
             </div>
-            <div class="mb-3">
-                <label for="credentials_file" class="form-label">Файл учетных данных</label>
-                <input type="file" class="form-control" id="credentials_file" name="credentials_file">
-            </div>
-        </div>
 
-        <button type="submit" class="btn btn-success">Добавить</button>
-    </form>
+            <!-- Google Sheets поля -->
+            <div id="google_fields" class="form-section" style="display: none;">
+                <h3>Настройки Google Sheets</h3>
+                <div class="form-group">
+                    <label for="service_account">Service Account</label>
+                    <input type="text" class="form-control" id="service_account" name="service_account">
+                    <small class="form-text text-muted">Email сервисного аккаунта Google</small>
+                </div>
+                <div class="form-group">
+                    <label for="credentials_file">Файл учетных данных</label>
+                    <input type="file" class="form-control" id="credentials_file" name="credentials_file">
+                    <small class="form-text text-muted">JSON файл с учетными данными</small>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Создать коннектор
+                </button>
+                <a href="{{ url_for('connectors.list_connectors') }}" class="btn btn-outline-secondary">
+                    <i class="fas fa-times"></i> Отмена
+                </a>
+            </div>
+        </form>
+    </div>
 </div>
+
+<style>
+.page-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.form-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    padding: 2rem;
+    margin-top: 2rem;
+}
+
+.form-section {
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #eee;
+}
+
+.form-section:last-child {
+    border-bottom: none;
+}
+
+.form-section h3 {
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+    font-size: 1.25rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #2C3E50;
+    font-weight: 500;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #E5E9F2;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+.form-text {
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.btn-primary {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+}
+
+.btn-primary:hover {
+    background: #357ABD;
+    transform: translateY(-1px);
+}
+
+.btn-outline-secondary {
+    border: 1px solid #E5E9F2;
+    color: #2C3E50;
+    background: white;
+}
+
+.btn-outline-secondary:hover {
+    background: #F8FAFC;
+    transform: translateY(-1px);
+}
+</style>
 
 <script>
 const templates = {
@@ -77,12 +202,17 @@ function updateTemplates() {
 
 function updateFields() {
     const template = document.getElementById("connector_template").value;
-
-    document.getElementById("yandex_fields").style.display = (template === "Яндекс.Директ") ? "block" : "none";
-    document.getElementById("google_fields").style.display = (template === "Google Sheets") ? "block" : "none";
+    
+    document.getElementById("yandex_fields").style.display = 
+        template === "Яндекс.Директ" ? "block" : "none";
+    
+    document.getElementById("google_fields").style.display = 
+        template === "Google Sheets" ? "block" : "none";
 }
 
-// Заполняем шаблоны при загрузке страницы
-updateTemplates();
+// Инициализация при загрузке страницы
+document.addEventListener('DOMContentLoaded', () => {
+    updateTemplates();
+});
 </script>
 {% endblock %}
