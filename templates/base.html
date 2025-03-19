@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -5,16 +6,70 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Мой проект{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Flatpickr (календарь) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <!-- Подключаем SortableJS для Drag-and-Drop -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #4A90E2;
+            --light-blue: #F5F9FF;
+            --hover-blue: #E1EFFF;
+        }
+        body {
+            background-color: var(--light-blue);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-color), #357ABD) !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+            padding: 24px;
+            margin-top: 24px;
+        }
+        .btn-primary {
+            background-color: var(--primary-color);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+        }
+        .btn-primary:hover {
+            background-color: #357ABD;
+        }
+        .list-group-item {
+            border-radius: 8px !important;
+            margin-bottom: 8px;
+            border: 1px solid #E5E9F2;
+            transition: all 0.2s ease;
+        }
+        .list-group-item:hover {
+            background-color: var(--hover-blue);
+        }
+        .badge {
+            padding: 6px 12px;
+            border-radius: 6px;
+        }
+        h2, h3 {
+            color: #2C3E50;
+            margin-bottom: 20px;
+        }
+        .form-control {
+            border-radius: 8px;
+            border: 1px solid #E5E9F2;
+            padding: 10px;
+        }
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.25);
+        }
+    </style>
 </head>
 <body>
-
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container">
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid px-4">
             <a class="navbar-brand" href="/">Коннекторы</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -36,5 +91,6 @@
         {% block content %}{% endblock %}
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
