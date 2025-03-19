@@ -1,0 +1,27 @@
+/* Подсветка активных полей */
+.active-field {
+    background-color: #d9edf7 !important;
+}
+
+/* Drag-and-drop эффекты */
+.dragging {
+    opacity: 0.6;
+    background-color: #f8f9fa;
+    border: 2px dashed #007bff;
+}
+
+/* Кнопки-иконки */
+.icon-btn {
+    font-size: 12px;
+    padding: 5px;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    cursor: pointer;
+}
+
+/* Скрытие элементов при поиске */
+.list-group-item {
+    transition: all 0.2s ease-in-out;
+}

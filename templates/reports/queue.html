@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mt-4">📊 Очередь запущенных отчётов</h2>
+    <table class="table mt-3">
+        <thead>
+            <tr>
+                <th>Клиент</th>
+                <th>Отчёт</th>
+                <th>Статус</th>
+                <th>Начало</th>
+                <th>Окончание</th>
+                <th>Количество строк</th>
+                <th>Период</th>
+                <th>Результат</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for report in queue %}
+            <tr>
+                <td>{{ report.client }}</td>
+                <td>{{ report.report }}</td>
+                <td>
+                    {% if report.status == "Выполняется" %}
+                        <span class="badge bg-warning">⌛ {{ report.status }}</span>
+                    {% elif "Ошибка" in report.status %}
+                        <span class="badge bg-danger">❌ {{ report.status }}</span>
+                    {% else %}
+                        <span class="badge bg-success">✅ {{ report.status }}</span>
+                    {% endif %}
+                </td>
+                <td>{{ report.start_time | datetimeformat('%d-%m-%Y %H:%M:%S') }}</td>
+                <td>{{ report.end_time | datetimeformat('%d-%m-%Y %H:%M:%S') if report.end_time else "—" }}</td>
+                <td>{{ report.rows or "—" }}</td>
+                <td>
+                    {% if report.period %}
+                        {{ report.period | periodformat }}
+                    {% else %}
+                        —
+                    {% endif %}
+                </td>
+                <td>
+                    {% if report.result and report.result.startswith("https://") %}
+                        <a href="{{ report.result }}" target="_blank">📄 Открыть</a>
+                    {% else %}
+                        —
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{{ url_for('connectors.list_connectors') }}" class="btn btn-primary">🔙 Назад</a>
+</div>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mt-4">Редактирование отчета: {{ report_name }}</h2>
+    <textarea id="jsonEditor" class="form-control" rows="15">{{ report_json }}</textarea>
+
+    <div class="mt-3">
+        <button class="btn btn-success" onclick="saveReport()">💾 Сохранить</button>
+        <a href="{{ url_for('reports.run_report', client_login=client_login, report_name=report_name) }}" class="btn btn-primary">🚀 Запустить отчет</a>
+    </div>
+
+    <div id="statusMessage" class="mt-3"></div>
+</div>
+
+<script>
+function saveReport() {
+    const jsonText = document.getElementById("jsonEditor").value;
+    let jsonData;
+
+    try {
+        jsonData = JSON.parse(jsonText);  // Проверяем JSON
+    } catch (error) {
+        alert("❌ Ошибка: некорректный JSON!");
+        return;
+    }
+
+    fetch("{{ url_for('reports.save_report', client_login=client_login, report_name=report_name) }}", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(jsonData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById("statusMessage").innerHTML = `<div class="alert alert-success">${data.message}</div>`;
+    })
+    .catch(error => {
+        document.getElementById("statusMessage").innerHTML = `<div class="alert alert-danger">Ошибка сохранения</div>`;
+    });
+}
+</script>
+{% endblock %}

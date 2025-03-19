@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>📊 Доступные отчёты</h2>
+    <p>{% reports %}</p>>
+    {% if reports %}
+        <ul class="list-group">
+            {% for report in reports %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>{{ report.name }}</strong> ({{ report.client }})
+                        <span class="badge bg-secondary">{{ report.date }}</span>
+                    </div>
+                    <a href="{{ url_for('reports.edit_report', client_login=report.client, report_name=report.name) }}" class="btn btn-info btn-sm">📂 Открыть</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="text-muted">Нет доступных отчётов.</p>
+    {% endif %}
+</div>
+{% endblock %}

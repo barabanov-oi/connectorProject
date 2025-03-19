@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mt-4">Добавить коннектор</h2>
+    <form method="POST" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="connector_name" class="form-label">Название коннектора</label>
+            <input type="text" class="form-control" id="connector_name" name="connector_name" required>
+        </div>
+
+        <!-- Выбор типа коннектора -->
+        <div class="mb-3">
+            <label for="connector_type" class="form-label">Тип коннектора</label>
+            <select class="form-control" id="connector_type" name="connector_type" required onchange="updateTemplates()">
+                <option value="Чтение">Чтение</option>
+                <option value="Запись">Запись</option>
+            </select>
+        </div>
+
+        <!-- Выбор шаблона -->
+        <div class="mb-3">
+            <label for="connector_template" class="form-label">Шаблон коннектора</label>
+            <select class="form-control" id="connector_template" name="connector_template" required onchange="updateFields()">
+                <!-- Заполняется через JS -->
+            </select>
+        </div>
+
+        <!-- Поля для Яндекс.Директа -->
+        <div id="yandex_fields" style="display: none;">
+            <div class="mb-3">
+                <label for="yandex_oauth_token" class="form-label">OAuth-токен Яндекс.Директ</label>
+                <input type="text" class="form-control" id="yandex_oauth_token" name="yandex_oauth_token">
+            </div>
+            <div class="mb-3">
+                <label for="client_login" class="form-label">Client Login</label>
+                <input type="text" class="form-control" id="client_login" name="client_login">
+            </div>
+        </div>
+
+        <!-- Поля для Google Sheets -->
+        <div id="google_fields" style="display: none;">
+            <div class="mb-3">
+                <label for="service_account" class="form-label">Service Account</label>
+                <input type="text" class="form-control" id="service_account" name="service_account">
+            </div>
+            <div class="mb-3">
+                <label for="credentials_file" class="form-label">Файл учетных данных</label>
+                <input type="file" class="form-control" id="credentials_file" name="credentials_file">
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-success">Добавить</button>
+    </form>
+</div>
+
+<script>
+const templates = {
+    "Чтение": ["Яндекс.Директ", "Кастомный API"],
+    "Запись": ["Google Sheets"]
+};
+
+function updateTemplates() {
+    const type = document.getElementById("connector_type").value;
+    const templateSelect = document.getElementById("connector_template");
+    templateSelect.innerHTML = "";
+
+    templates[type].forEach(template => {
+        let option = document.createElement("option");
+        option.value = template;
+        option.textContent = template;
+        templateSelect.appendChild(option);
+    });
+
+    updateFields();
+}
+
+function updateFields() {
+    const template = document.getElementById("connector_template").value;
+
+    document.getElementById("yandex_fields").style.display = (template === "Яндекс.Директ") ? "block" : "none";
+    document.getElementById("google_fields").style.display = (template === "Google Sheets") ? "block" : "none";
+}
+
+// Заполняем шаблоны при загрузке страницы
+updateTemplates();
+</script>
+{% endblock %}

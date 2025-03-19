@@ -1,0 +1,28 @@
+{
+    "CLIENT_LOGIN": "vivion-la",
+    "SHEET_ID": "1qmo0HV2gyCUZbjSLzw5RO_jNkslZfWYbl_mF65Th7Ks",
+    "SHEET_NAME": "\u041a\u043b\u044e\u0447\u0435\u0432\u044b\u0435 \u043f\u043e\u043a\u0430\u0437\u0430\u0442\u0435\u043b\u0438",
+    "START_DATE": "13-03-2024",
+    "END_DATE": "yesterday",
+    "PERIOD_DETAIL": "weekly",
+    "SAVE_MODE": "separate",
+    "SAVE_FORMAT": "xlsx",
+    "SAVE_TYPE": "google_sheets",
+    "SAVE_DRIVER": "barabanov-connect",
+    "REPORT_TYPE": "CUSTOM_REPORT",
+    "FIELD_NAMES": [
+        "Date",
+        "CampaignName",
+        "CampaignId",
+        "AdNetworkType",
+        "CampaignType",
+        "Impressions",
+        "Clicks",
+        "Cost",
+        "Conversions"
+    ],
+    "CONVERSIONS": [
+        201467338,
+        343384356
+    ]
+}

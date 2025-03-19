@@ -1,0 +1,6 @@
+{
+    "CONNECTOR_SERVICE": "Google Sheets",
+    "CONNECTOR_TYPE": "write",
+    "SERVICE_ACCOUNT": "barabanov-connect@api-project-453520.iam.gserviceaccount.com",
+    "CREDENTIALS_FILE": "api-project-upd.json"
+}
