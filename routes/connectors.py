@@ -32,13 +32,14 @@ def list_connectors():
                     with open(file_path, 'r', encoding='utf-8') as f:
                         config = json.load(f)
                     
+                    connector_type = config.get("CONNECTOR_TYPE")
                     connector_info = {
                         "name": filename.replace('.json', ''),
                         "service": config.get("CONNECTOR_SERVICE", "Unknown"),
-                        "type": config.get("CONNECTOR_TYPE", "unknown")
+                        "type": connector_type
                     }
                     
-                    if connector_info["type"] == "read":
+                    if connector_type == "read":
                         reading_connectors.append(connector_info)
                     else:
                         writing_connectors.append(connector_info)
