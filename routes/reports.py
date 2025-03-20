@@ -5,7 +5,7 @@ import json
 from services.reports.report_service import load_report_config, save_report_config
 from services.connectors.connector_service import load_connector_config
 from services.direct_reports import process_reports
-from config_handler import parse_dates, get_periods
+from services.date_utils import parse_dates, get_periods
 from services.reports.file_saver import save_report_to_file
 from services.reports.google_sheets_saver import save_to_google_sheets
 from services.reports.report_queue import add_report_to_queue, update_report_status, load_report_queue
