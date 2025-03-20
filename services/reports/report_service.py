@@ -20,7 +20,7 @@ def format_json_config(config: Dict) -> str:
     """Форматирует JSON-конфигурацию с отступами"""
     return json.dumps(config, indent=4, ensure_ascii=False)
 
-def load_report_config(user_id: int, client_login: str, report_name: str) -> Optional[Dict]:
+def load_report_config(client_login: str, report_name: str) -> Optional[Dict]:
     """Загружает конфигурацию отчета"""
     file_path = os.path.join(REPORT_CONFIG_PATH, f"{client_login}_{report_name}.json")
     

@@ -105,7 +105,7 @@ def list_reports():
 @reports_bp.route('/reports/<client_login>/<report_name>/edit', methods=['GET'])
 def edit_report(client_login, report_name):
     try:
-        report_config = load_report_config(current_user.id, client_login, report_name)
+        report_config = load_report_config(client_login, report_name)
 
         if not report_config:
             flash(f"❌ Ошибка: отчёт {report_name} не найден.", "danger")
