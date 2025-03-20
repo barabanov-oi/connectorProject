@@ -78,7 +78,9 @@ def run_report_background(client_login, report_name):
 
 
 @reports_bp.route('/reports/<client_login>/<report_name>/run', methods=['POST'])
+@login_required
 def run_report(client_login, report_name):
+    user_id = current_user.id
     """Запускает отчёт в фоне и обновляет очередь."""
     add_report_to_queue(client_login, report_name)
     thread = threading.Thread(target=run_report_background, args=(client_login, report_name))

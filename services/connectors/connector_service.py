@@ -6,16 +6,25 @@ CONNECTORS_PATH = "services/connectors/config"
 os.makedirs(CONNECTOR_CONFIG_PATH, exist_ok=True)  # Create directory if it doesn't exist
 
 
-def save_connector_config(client_login, config_data):
-    """Сохраняет конфигурацию коннектора в JSON-файл."""
-    file_path = os.path.join(CONNECTOR_CONFIG_PATH, f"{client_login}.json")
+def get_user_config_path(user_id):
+    """Создает директорию для конфигураций пользователя."""
+    user_path = os.path.join(CONNECTOR_CONFIG_PATH, str(user_id))
+    os.makedirs(user_path, exist_ok=True)
+    return user_path
+
+def save_connector_config(connector_name, config_data, user_id):
+    """Сохраняет конфигурацию коннектора."""
+    file_name = f"{connector_name}.json"
+    user_path = get_user_config_path(user_id)
+    file_path = os.path.join(user_path, file_name)
     with open(file_path, "w", encoding="utf-8") as f:
         json.dump(config_data, f, indent=4)
 
 
-def load_connector_config(client_login):
+def load_connector_config(connector_name, user_id):
     """Загружает конфигурацию коннектора из JSON-файла."""
-    file_path = os.path.join(CONNECTOR_CONFIG_PATH, f"{client_login}.json")
+    user_path = get_user_config_path(user_id)
+    file_path = os.path.join(user_path, f"{connector_name}.json")
     if not os.path.exists(file_path):
         raise FileNotFoundError(f"Файл {file_path} не найден.")
 
@@ -23,11 +32,12 @@ def load_connector_config(client_login):
         return json.load(f)
 
 
-def load_all_connectors():
-    """Загружает список всех доступных коннекторов."""
+def load_all_connectors(user_id):
+    """Загружает список всех доступных коннекторов для указанного пользователя."""
+    user_path = get_user_config_path(user_id)
     connectors = []
-    for filename in os.listdir(CONNECTORS_PATH):
-        file_path = os.path.join(CONNECTORS_PATH, filename)
+    for filename in os.listdir(user_path):
+        file_path = os.path.join(user_path, filename)
         with open(file_path, "r", encoding="utf-8") as f:
             config = json.load(f)
             connectors.append({

@@ -55,7 +55,9 @@ def list_connectors():
                            reports=reports)
 
 @connectors_bp.route('/connectors/new', methods=['GET', 'POST'])
+@login_required
 def add_connector():
+    user_id = current_user.id
     """Создание нового коннектора (выбор шаблона и сохранение данных)."""
     if request.method == 'POST':
         connector_name = request.form['connector_name']

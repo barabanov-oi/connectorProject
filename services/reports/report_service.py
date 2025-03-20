@@ -2,12 +2,19 @@ import json
 import os
 from datetime import datetime
 
-REPORT_CONFIG_PATH = os.path.abspath("services/reports/config")  # Абсолютный путь
+REPORT_CONFIG_PATH = os.path.abspath("services/reports/config")
 
-def save_report_config(client_login, report_name, config_data):
+def get_user_config_path(user_id):
+    """Создает директорию для конфигураций пользователя."""
+    user_path = os.path.join(REPORT_CONFIG_PATH, str(user_id))
+    os.makedirs(user_path, exist_ok=True)
+    return user_path
+
+def save_report_config(client_login, report_name, config_data, user_id):
     """Сохраняет конфигурацию отчета в JSON-файл."""
     file_name = f"{report_name}.json"
-    file_path = os.path.join(REPORT_CONFIG_PATH, file_name)
+    user_path = get_user_config_path(user_id)
+    file_path = os.path.join(user_path, file_name)
 
     with open(file_path, "w", encoding="utf-8") as f:
         json.dump(config_data, f, indent=4)
