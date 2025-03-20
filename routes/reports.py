@@ -1,4 +1,5 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, Flask, login_required, current_user
+from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, Flask
+from flask_login import login_required, current_user
 import threading
 from services.reports.report_service import load_report_config, save_report_config
 from services.connectors.connector_service import load_connector_config
