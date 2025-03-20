@@ -108,8 +108,8 @@ def edit_report(user_id):
     if user_id != current_user.id:
         flash("❌ Ошибка: нет доступа к отчёту", "danger")
         return redirect(url_for('reports.list_reports'))
-    user_id = current_user.id
     try:
+        report_name = request.args.get('report_name', '')
         report_config = load_report_config(user_id, report_name)
 
         if not report_config:
