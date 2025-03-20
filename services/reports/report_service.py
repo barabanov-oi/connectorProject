@@ -46,9 +46,10 @@ def load_all_reports():
                 with open(file_path, "r", encoding="utf-8") as f:
                     report_data = json.load(f)
                     client = report_data.get('CLIENT_LOGIN', 'unknown')
-                    name = filename.replace(f"{client}_{client}_", f"{client}_").replace(".json", "")
+                    display_name = report_data.get('REPORT_NAME')
+                    file_name = filename.replace(f"{client}_{client}_", f"{client}_").replace(".json", "")
                     reports.append({
-                        "name": name,
+                        "name": display_name or file_name,
                         "client": client,
                         "date": report_data.get("START_DATE", "Не указано"),
                         "fields": report_data.get("FIELD_NAMES", [])
