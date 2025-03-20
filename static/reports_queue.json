@@ -2,9 +2,9 @@
     {
         "user_id": 1,
         "report": "vivion-la_report-base",
-        "status": "Ошибка: load_connector_config() missing 1 required positional argument: 'user_id'",
+        "status": "Ошибка: time data '16-03-2025' does not match format '%Y-%m-%d'",
         "start_time": "2025-03-20 16:09:17",
-        "end_time": "2025-03-20 16:09:17",
+        "end_time": "2025-03-20 16:31:28",
         "rows_count": 0,
         "period": null,
         "result_link": null
@@ -24,6 +24,16 @@
         "report": "vivion-la_report-base",
         "status": "Выполняется",
         "start_time": "2025-03-20 16:30:00",
+        "end_time": null,
+        "rows_count": 0,
+        "period": null,
+        "result_link": null
+    },
+    {
+        "user_id": 1,
+        "report": "vivion-la_report-base",
+        "status": "Выполняется",
+        "start_time": "2025-03-20 16:31:28",
         "end_time": null,
         "rows_count": 0,
         "period": null,
