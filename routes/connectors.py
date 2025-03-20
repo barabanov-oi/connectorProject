@@ -20,29 +20,30 @@ def list_connectors():
     from models.connector import Connector
     from flask_login import current_user
     
-    user_connectors = Connector.query.filter_by(user_id=current_user.id).all()
-    
     reading_connectors = []  # Коннекторы типа "Чтение"
     writing_connectors = []  # Коннекторы типа "Запись"
     
     user_path = os.path.join("static/users", str(current_user.id), "connectors")
     if os.path.exists(user_path):
-        for connector in user_connectors:
-            file_path = os.path.join(user_path, connector.config_file)
-            if os.path.exists(file_path):
-                with open(file_path, 'r', encoding='utf-8') as f:
-                    config = json.load(f)
+        for filename in os.listdir(user_path):
+            if filename.endswith('.json'):
+                file_path = os.path.join(user_path, filename)
+                try:
+                    with open(file_path, 'r', encoding='utf-8') as f:
+                        config = json.load(f)
                     
-                connector_info = {
-                    "name": connector.name,
-                    "service": config.get("CONNECTOR_TYPE", "Unknown"),
-                    "type": connector.connector_type
-                }
-                
-                if connector.connector_type == "read":
-                    reading_connectors.append(connector_info)
-                elif connector.connector_type == "write":
-                    writing_connectors.append(connector_info)
+                    connector_info = {
+                        "name": filename.replace('.json', ''),
+                        "service": config.get("CONNECTOR_TYPE", "Unknown"),
+                        "type": "read" if config.get("CONNECTOR_TYPE") == "Яндекс.Директ" else "write"
+                    }
+                    
+                    if connector_info["type"] == "read":
+                        reading_connectors.append(connector_info)
+                    else:
+                        writing_connectors.append(connector_info)
+                except:
+                    continue
 
     reports = load_all_reports(current_user.id)  # ✅ Загружаем отчёты с учетом пользователя
     print(reports)
