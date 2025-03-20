@@ -1,5 +1,6 @@
 {
   "CONNECTOR_TYPE": "Яндекс.Директ",
   "YANDEX_OAUTH_TOKEN": "sec_test",
-  "CLIENT_LOGIN": "test-login-1"
+  "CLIENT_LOGIN": "test-login-1",
+  "CONNECTOR_TYPE": "read"
 }
