@@ -109,7 +109,7 @@ def edit_report(client_login, report_name):
     """Загружает JSON-конфиг отчета в HTML-редактор."""
     try:
         # ✅ Загружаем конфигурацию отчета
-        report_config = load_report_config(client_login, report_name)
+        report_config = load_report_config(f"{client_login}_{report_name}")
 
         if not report_config:
             flash(f"❌ Ошибка: отчёт {report_name} не найден.", "danger")
