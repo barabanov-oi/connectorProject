@@ -93,7 +93,7 @@ def add_connector():
             return redirect(url_for('connectors.add_connector'))
 
         # Сохраняем конфиг в файл
-        save_connector_config(connector_name, config_data)
+        save_connector_config(connector_name, config_data, current_user.id)
         flash('Коннектор успешно сохранен!', 'success')
         return redirect(url_for('connectors.list_connectors'))
 
