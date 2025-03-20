@@ -18,5 +18,15 @@
         "rows_count": 0,
         "period": null,
         "result_link": null
+    },
+    {
+        "user_id": 1,
+        "report": "vivion-la_report-base",
+        "status": "Выполняется",
+        "start_time": "2025-03-20 16:30:00",
+        "end_time": null,
+        "rows_count": 0,
+        "period": null,
+        "result_link": null
     }
 ]
