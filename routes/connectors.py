@@ -17,35 +17,24 @@ os.makedirs(GOOGLE_CREDENTIALS_PATH, exist_ok=True)  # Создаем папку
 @connectors_bp.route('/connectors', methods=['GET'])
 def list_connectors():
     """Список всех доступных коннекторов (группируем по типу read/write)."""
-    config_path = "services/connectors/config"
-    os.makedirs(config_path, exist_ok=True)  # Create directory if it doesn't exist
-
-    # ✅ Оставляем только JSON-файлы
-    connector_files = [f for f in os.listdir(config_path) if f.endswith(".json")]
-
-    print(connector_files)  # Выводим список файлов для отладки
-
+    from models.connector import Connector
+    from flask_login import current_user
+    
+    user_connectors = Connector.query.filter_by(user_id=current_user.id).all()
+    
     reading_connectors = []  # Коннекторы типа "Чтение"
     writing_connectors = []  # Коннекторы типа "Запись"
-
-    for file_name in connector_files:
-        file_path = os.path.join(config_path, file_name)
-        with open(file_path, "r", encoding="utf-8") as f:
-            config = json.load(f)
-
-        connector_name = file_name.replace(".json", "")
-        connector_type = config.get("CONNECTOR_TYPE", "unknown")  # read / write
-        connector_service = config.get("CONNECTOR_SERVICE", "Неизвестный сервис")
-
+    
+    for connector in user_connectors:
         connector_info = {
-            "name": connector_name,
-            "service": connector_service,
-            "type": connector_type
+            "name": connector.name,
+            "service": connector.service,
+            "type": connector.connector_type
         }
-
-        if connector_type == "read":
+        
+        if connector.connector_type == "read":
             reading_connectors.append(connector_info)
-        elif connector_type == "write":
+        elif connector.connector_type == "write":
             writing_connectors.append(connector_info)
 
     reports = load_all_reports(current_user.id)  # ✅ Загружаем отчёты с учетом пользователя

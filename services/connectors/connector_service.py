@@ -46,3 +46,31 @@ def load_all_connectors(user_id):
                 "type": config.get("CONNECTOR_TYPE", "unknown")  # read / write
             })
     return connectors
+from models.connector import Connector
+from extensions import db
+import os
+import json
+
+def save_connector_config(name, config_data, user_id):
+    """Сохраняет конфигурацию коннектора в файл и БД."""
+    # Сохраняем конфиг в файл
+    config_path = "services/connectors/config"
+    os.makedirs(config_path, exist_ok=True)
+    
+    file_name = f"{name}.json"
+    file_path = os.path.join(config_path, file_name)
+    
+    with open(file_path, "w", encoding="utf-8") as f:
+        json.dump(config_data, f, ensure_ascii=False, indent=2)
+    
+    # Сохраняем в БД
+    connector = Connector(
+        name=name,
+        connector_type=config_data.get("CONNECTOR_TYPE", "read"),
+        service=config_data.get("CONNECTOR_SERVICE", "Unknown"),
+        config_file=file_name,
+        user_id=user_id
+    )
+    
+    db.session.add(connector)
+    db.session.commit()

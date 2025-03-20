@@ -1,11 +1,11 @@
-from extensions import db
 
+from extensions import db
 
 class Connector(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(150), nullable=False)
-    api_key = db.Column(db.String(100), nullable=False)
-    client_login = db.Column(db.String(100), nullable=False)
+    connector_type = db.Column(db.String(50), nullable=False)  # read/write
+    service = db.Column(db.String(50), nullable=False)  # Яндекс.Директ/Google Sheets
+    config_file = db.Column(db.String(150), nullable=False)  # Название файла с настройками
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
-    config_file = db.Column(db.String(150))
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False) nullable=False)  # Название файла с настройками коннектора
