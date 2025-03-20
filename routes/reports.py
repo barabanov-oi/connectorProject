@@ -47,17 +47,14 @@ def run_report_background(user_id, report_name):
         else:
             period_str = "Неизвестно"
 
-        df, reports_line_count, reports_ids = process_reports(token, field_names, report_config)
+        df, reports_line_count = process_reports(token, field_names, report_config)
 
         if df.empty:
             update_report_status(user_id, report_name, "Готово (пустой отчет)", 0, period_str)
             return
 
-        # Получаем период из первого отчета в reports_line_count
-        if reports_line_count:
-            period = next(iter(reports_line_count.keys()))
-        else:
-            period = period_str
+        # Используем period_str для отображения периода
+        period = period_str
 
         save_format = report_config.get("SAVE_FORMAT")
         if save_format in ["csv", "xlsx"]:
