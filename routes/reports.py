@@ -102,14 +102,13 @@ def list_reports():
     return render_template('reports/list.html', reports=reports, presets=presets)
 
 
-@reports_bp.route('/reports/<int:user_id>/edit', methods=['GET'])
+@reports_bp.route('/reports/<int:user_id>/<report_name>/edit', methods=['GET'])
 @login_required
-def edit_report(user_id):
+def edit_report(user_id, report_name):
     if user_id != current_user.id:
         flash("❌ Ошибка: нет доступа к отчёту", "danger")
         return redirect(url_for('reports.list_reports'))
     try:
-        report_name = request.args.get('report_name', '')
         report_config = load_report_config(user_id, report_name)
 
         if not report_config:
