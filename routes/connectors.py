@@ -34,8 +34,8 @@ def list_connectors():
                     
                     connector_info = {
                         "name": filename.replace('.json', ''),
-                        "service": config.get("CONNECTOR_TYPE", "Unknown"),
-                        "type": "read" if config.get("CONNECTOR_TYPE") == "Яндекс.Директ" else "write"
+                        "service": config.get("CONNECTOR_SERVICE", "Unknown"),
+                        "type": config.get("CONNECTOR_TYPE", "unknown")
                     }
                     
                     if connector_info["type"] == "read":
