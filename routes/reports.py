@@ -45,12 +45,12 @@ def run_report_background(user_id, report_name):
         df, report_lines, reports_ids = process_reports(token, field_names, report_config)
 
         if df.empty:
-            update_report_status(client_login, report_name, "Готово (пустой отчет)", 0, f"{start_date} - {end_date}")
+            update_report_status(user_id, report_name, "Готово (пустой отчет)", 0, f"{start_date} - {end_date}")
             return
 
         save_format = report_config.get("SAVE_FORMAT")
         if save_format in ["csv", "xlsx"]:
-            save_report_to_file(df, client_login, report_name, save_format)
+            save_report_to_file(df, user_id, report_name, save_format)
 
         save_type = report_config.get("SAVE_TYPE", "")
         result_link = "-"
@@ -65,21 +65,26 @@ def run_report_background(user_id, report_name):
             if sheet_id and sheet_name:
                 success = save_to_google_sheets(df, sheet_id, sheet_name, credentials_file)
                 if success:
-                    update_report_status(client_login, report_name, "Готово", df.shape[0], period_str, result_link,
+                    update_report_status(user_id, report_name, "Готово", df.shape[0], period_str, result_link,
                                          reports_ids)
                 else:
                     result_link = "-"
 
-        update_report_status(client_login, report_name, "Готово", df.shape[0], period_str, result_link)
+        update_report_status(user_id, report_name, "Готово", df.shape[0], period_str, result_link)
 
     except Exception as e:
-        update_report_status(client_login, report_name, f"Ошибка: {str(e)}")
+        update_report_status(user_id, report_name, f"Ошибка: {str(e)}")
 
 
 @reports_bp.route('/reports/<report_name>/run', methods=['GET', 'POST'])
 @login_required
 def run_report(report_name):
     user_id = current_user.id
+    connector_config = load_connector_config("test-login", user_id)
+    if not connector_config:
+        flash("❌ Ошибка: не найден конфигурационный файл коннектора", "error")
+        return redirect(url_for('reports.report_queue'))
+    
     add_report_to_queue(user_id, report_name)
     thread = threading.Thread(target=run_report_background, args=(user_id, report_name))
     thread.start()
