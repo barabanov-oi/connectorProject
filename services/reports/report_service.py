@@ -53,8 +53,9 @@ def load_all_reports(user_id: int) -> List[Dict]:
     """Загружает список всех отчетов"""
     reports = []
     
-    if not os.path.exists(REPORT_CONFIG_PATH):
-        os.makedirs(REPORT_CONFIG_PATH)
+    user_reports_path = os.path.join("static/users", str(user_id), "reports")
+    if not os.path.exists(user_reports_path):
+        os.makedirs(user_reports_path)
         return reports
         
     for filename in os.listdir(REPORT_CONFIG_PATH):

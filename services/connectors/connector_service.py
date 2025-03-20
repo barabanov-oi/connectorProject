@@ -1,14 +1,12 @@
 import json
 import os
 
-CONNECTOR_CONFIG_PATH = "services/connectors/config"
-CONNECTORS_PATH = "services/connectors/config"
-os.makedirs(CONNECTOR_CONFIG_PATH, exist_ok=True)  # Create directory if it doesn't exist
-
+USERS_PATH = "static/users"
+os.makedirs(USERS_PATH, exist_ok=True)
 
 def get_user_config_path(user_id):
     """Создает директорию для конфигураций пользователя."""
-    user_path = os.path.join(CONNECTOR_CONFIG_PATH, str(user_id))
+    user_path = os.path.join(USERS_PATH, str(user_id), "connectors")
     os.makedirs(user_path, exist_ok=True)
     return user_path
 
