@@ -37,7 +37,7 @@ function saveReport() {
         return;
     }
 
-    fetch("{{ url_for('reports.save_report', client_login=client_login, report_name=report_name) }}", {
+    fetch("{{ url_for('reports.save_report', user_id=current_user.id, report_name=report_name) }}", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(jsonData)
