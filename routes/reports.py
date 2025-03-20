@@ -16,11 +16,11 @@ app = Flask(__name__)
 reports_bp = Blueprint('reports', __name__)
 
 
-def run_report_background(client_login, report_name):
+def run_report_background(user_id, report_name):
     """Фоновый процесс для выполнения отчёта."""
     try:
-        report_config = load_report_config(client_login, report_name)
-        connector_config = load_connector_config(client_login)
+        report_config = load_report_config(user_id, report_name)
+        connector_config = load_connector_config(user_id)
         token = connector_config.get("YANDEX_OAUTH_TOKEN")
 
         if not token:
@@ -108,7 +108,7 @@ def list_reports():
 def edit_report(report_name=None):
     user_id = current_user.id
     try:
-        report_config = load_report_config(client_login, report_name)
+        report_config = load_report_config(user_id, report_name)
 
         if not report_config:
             flash(f"❌ Ошибка: отчёт {report_name} не найден.", "danger")
@@ -118,7 +118,6 @@ def edit_report(report_name=None):
 
         return render_template(
             'reports/edit.html',
-            client_login=client_login,
             report_name=report_name,
             report_json=report_json
         )
