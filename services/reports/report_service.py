@@ -28,9 +28,6 @@ def load_report_config(client_login: str, report_name: str) -> Optional[Dict]:
         return None
         
     with open(file_path, "r", encoding="utf-8") as f:
-        return json.load(f)eturn None
-        
-    with open(file_path, "r", encoding="utf-8") as f:
         return json.load(f)
 
 def save_report_config(user_id: int, client_login: str, report_name: str, config: Dict) -> tuple[bool, str]:
