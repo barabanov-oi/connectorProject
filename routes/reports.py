@@ -106,6 +106,9 @@ def list_reports():
 @reports_bp.route('/reports/<report_name>/edit', methods=['GET'])
 @login_required
 def edit_report(report_name=None):
+    if not report_name:
+        flash("❌ Ошибка: не указано имя отчёта", "danger")
+        return redirect(url_for('reports.list_reports'))
     user_id = current_user.id
     try:
         report_config = load_report_config(user_id, report_name)
