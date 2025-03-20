@@ -4,7 +4,11 @@ import os
 from typing import Dict, List, Optional
 from datetime import datetime
 
-REPORT_CONFIG_PATH = "services/reports/config"
+def get_user_reports_path(user_id):
+    """Возвращает путь к папке с отчетами пользователя"""
+    return os.path.join("static/users", str(user_id), "reports")
+
+REPORT_CONFIG_PATH = get_user_reports_path
 
 def validate_report_config(config: Dict) -> tuple[bool, str]:
     """Проверяет конфигурацию отчета на корректность"""
@@ -20,13 +24,23 @@ def format_json_config(config: Dict) -> str:
     """Форматирует JSON-конфигурацию с отступами"""
     return json.dumps(config, indent=4, ensure_ascii=False)
 
-def load_report_config(client_login: str, report_name: str) -> Optional[Dict]:
+def load_report_config(client_login: str, report_name: str, user_id: Optional[int] = None) -> Optional[Dict]:
     """Загружает конфигурацию отчета"""
     # Убираем client_login из report_name если он там уже есть
     clean_report_name = report_name.replace(f"{client_login}_", "")
-    file_path = os.path.join(REPORT_CONFIG_PATH, f"{client_login}_{clean_report_name}.json")
+    
+    if user_id is not None:
+        config_path = REPORT_CONFIG_PATH(user_id)
+    else:
+        config_path = "services/reports/config"
+        
+    file_path = os.path.join(config_path, f"{client_login}_{clean_report_name}.json")
     
     if not os.path.exists(file_path):
+        return None
+        
+    with open(file_path, 'r', encoding='utf-8') as f:
+        return json.load(f)sts(file_path):
         return None
         
     with open(file_path, "r", encoding="utf-8") as f:
