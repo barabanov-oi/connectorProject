@@ -4,7 +4,7 @@
         "report": "vivion-la_report-base",
         "status": "Ошибка: cannot access local variable 'period_end' where it is not associated with a value",
         "start_time": "2025-03-20 16:09:17",
-        "end_time": "2025-03-20 16:32:22",
+        "end_time": "2025-03-20 16:34:15",
         "rows_count": 0,
         "period": null,
         "result_link": null
@@ -44,6 +44,16 @@
         "report": "vivion-la_report-base",
         "status": "Выполняется",
         "start_time": "2025-03-20 16:32:22",
+        "end_time": null,
+        "rows_count": 0,
+        "period": null,
+        "result_link": null
+    },
+    {
+        "user_id": 1,
+        "report": "vivion-la_report-base",
+        "status": "Выполняется",
+        "start_time": "2025-03-20 16:34:15",
         "end_time": null,
         "rows_count": 0,
         "period": null,
