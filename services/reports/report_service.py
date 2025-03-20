@@ -58,10 +58,10 @@ def load_all_reports(user_id: int) -> List[Dict]:
         os.makedirs(user_reports_path)
         return reports
         
-    for filename in os.listdir(REPORT_CONFIG_PATH):
+    for filename in os.listdir(user_reports_path):
         if filename.endswith(".json"):
             try:
-                file_path = os.path.join(REPORT_CONFIG_PATH, filename)
+                file_path = os.path.join(user_reports_path, filename)
                 with open(file_path, "r", encoding="utf-8") as f:
                     report_data = json.load(f)
                     client = report_data.get('CLIENT_LOGIN', 'unknown')
