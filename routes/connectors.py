@@ -25,17 +25,24 @@ def list_connectors():
     reading_connectors = []  # Коннекторы типа "Чтение"
     writing_connectors = []  # Коннекторы типа "Запись"
     
-    for connector in user_connectors:
-        connector_info = {
-            "name": connector.name,
-            "service": connector.service,
-            "type": connector.connector_type
-        }
-        
-        if connector.connector_type == "read":
-            reading_connectors.append(connector_info)
-        elif connector.connector_type == "write":
-            writing_connectors.append(connector_info)
+    user_path = os.path.join("static/users", str(current_user.id), "connectors")
+    if os.path.exists(user_path):
+        for connector in user_connectors:
+            file_path = os.path.join(user_path, connector.config_file)
+            if os.path.exists(file_path):
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    config = json.load(f)
+                    
+                connector_info = {
+                    "name": connector.name,
+                    "service": config.get("CONNECTOR_TYPE", "Unknown"),
+                    "type": connector.connector_type
+                }
+                
+                if connector.connector_type == "read":
+                    reading_connectors.append(connector_info)
+                elif connector.connector_type == "write":
+                    writing_connectors.append(connector_info)
 
     reports = load_all_reports(current_user.id)  # ✅ Загружаем отчёты с учетом пользователя
     print(reports)

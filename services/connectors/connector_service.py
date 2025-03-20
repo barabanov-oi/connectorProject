@@ -22,7 +22,7 @@ def get_user_config_path(user_id):
     return user_path
 
 def save_connector_config(name, config_data, user_id):
-    """Сохраняет конфигурацию коннектора."""
+    """Сохраняет конфигурацию коннектора в файл и БД."""
     # Транслитерация имени файла
     file_name = f"{transliterate(name)}.json"
     user_path = get_user_config_path(user_id)
@@ -30,6 +30,18 @@ def save_connector_config(name, config_data, user_id):
 
     with open(file_path, "w", encoding="utf-8") as f:
         json.dump(config_data, f, ensure_ascii=False, indent=2)
+
+    # Сохраняем в БД
+    connector = Connector(
+        name=name,
+        connector_type="read" if config_data.get("CONNECTOR_TYPE") == "Яндекс.Директ" else "write",
+        service=config_data.get("CONNECTOR_TYPE", "Unknown"),
+        config_file=file_name,
+        user_id=user_id
+    )
+    
+    db.session.add(connector)
+    db.session.commit()
 
 def load_connector_config(connector_name, user_id):
     """Загружает конфигурацию коннектора из JSON-файла."""
