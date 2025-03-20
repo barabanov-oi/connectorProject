@@ -36,6 +36,5 @@ def get_periods(start_date: datetime, end_date: datetime, period_detail: str = "
             period_end.strftime("%Y-%m-%d")
         ))
         current = period_end + timedelta(days=1)
-    return periods
-        
+    
     return periods
