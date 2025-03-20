@@ -97,12 +97,15 @@ def report_queue():
     return render_template('reports/queue.html', queue=queue)
 
 @reports_bp.route('/reports/', methods=['GET'])
+@login_required
 def list_reports():
     """Загружает список всех отчётов и передаёт в шаблон."""
-    from services.reports.report_service import load_all_reports  # ✅ Добавляем импорт
+    from services.reports.report_service import load_all_reports
+    from services.reports.report_presets import ReportPresets
 
-    reports = load_all_reports()  # ✅ Загружаем список отчётов
-    return render_template('reports/list.html', reports=reports)
+    reports = load_all_reports(current_user.id)
+    presets = ReportPresets.get_available_presets()
+    return render_template('reports/list.html', reports=reports, presets=presets)
 
 
 @reports_bp.route('/reports/<client_login>/<report_name>/edit', methods=['GET'])
