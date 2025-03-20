@@ -20,7 +20,7 @@ app.register_blueprint(auth_bp)
 @login_manager.user_loader
 def load_user(user_id):
     from models.user import User
-    return User.query.get(int(user_id))
+    return db.session.get(User, int(user_id))
 
 @app.route('/')
 def index():
