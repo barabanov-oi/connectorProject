@@ -21,7 +21,7 @@ def save_report_config(client_login, report_name, config_data, user_id):
 
 def load_report_config(client_login, report_name):
     """Загружает конфигурацию отчета из JSON-файла."""
-    file_name = f"{report_name}.json"
+    file_name = f"{client_login}_{report_name}.json"
     file_path = os.path.join(REPORT_CONFIG_PATH, file_name)
 
     if not os.path.exists(file_path):
