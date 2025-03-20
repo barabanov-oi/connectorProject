@@ -1,0 +1,12 @@
+[
+    {
+        "user_id": 1,
+        "report": "vivion-la_report-base",
+        "status": "Ошибка: load_connector_config() missing 1 required positional argument: 'user_id'",
+        "start_time": "2025-03-20 16:09:17",
+        "end_time": "2025-03-20 16:09:17",
+        "rows_count": 0,
+        "period": null,
+        "result_link": null
+    }
+]
