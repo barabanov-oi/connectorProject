@@ -22,7 +22,9 @@ def format_json_config(config: Dict) -> str:
 
 def load_report_config(client_login: str, report_name: str) -> Optional[Dict]:
     """Загружает конфигурацию отчета"""
-    file_path = os.path.join(REPORT_CONFIG_PATH, f"{client_login}_{report_name}.json")
+    # Убираем client_login из report_name если он там уже есть
+    clean_report_name = report_name.replace(f"{client_login}_", "")
+    file_path = os.path.join(REPORT_CONFIG_PATH, f"{client_login}_{clean_report_name}.json")
     
     if not os.path.exists(file_path):
         return None
