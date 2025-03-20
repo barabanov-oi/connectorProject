@@ -40,12 +40,17 @@ def run_report_background(user_id, report_name):
             report_config["Periods"] = periods
         else:
             start_date, end_date = "Неизвестно", "Неизвестно"
-        period_str = f"{start_date.strftime('%d-%m-%Y')} - {end_date.strftime('%d-%m-%Y')}" if start_date and end_date else "Неизвестно"
+        if isinstance(start_date, str) and isinstance(end_date, str):
+            period_str = f"{start_date} - {end_date}"
+        elif start_date and end_date:
+            period_str = f"{start_date.strftime('%d-%m-%Y')} - {end_date.strftime('%d-%m-%Y')}"
+        else:
+            period_str = "Неизвестно"
 
         df, report_lines, reports_ids = process_reports(token, field_names, report_config)
 
         if df.empty:
-            update_report_status(user_id, report_name, "Готово (пустой отчет)", 0, f"{start_date} - {end_date}")
+            update_report_status(user_id, report_name, "Готово (пустой отчет)", 0, period_str)
             return
 
         save_format = report_config.get("SAVE_FORMAT")
