@@ -150,11 +150,13 @@ def periodformat(value):
     except Exception:
         return "Что-то пошло не так"
 
-@reports_bp.route('/reports/<client_login>/<report_name>/save', methods=['POST'])
-def save_report(client_login, report_name):
+@reports_bp.route('/reports/<int:user_id>/<report_name>/save', methods=['POST'])
+def save_report(user_id, report_name):
     try:
+        if user_id != current_user.id:
+            return jsonify({"status": "error", "message": "❌ Нет доступа к отчету"}), 403
         report_data = request.get_json()
-        save_report_config(client_login, report_name, report_data)
+        save_report_config(user_id, report_name, report_data)
         return jsonify({"status": "success", "message": "✅ Отчет успешно сохранен!"})
     except Exception as e:
         return jsonify({"status": "error", "message": f"❌ Ошибка при сохранении: {str(e)}"}), 500
