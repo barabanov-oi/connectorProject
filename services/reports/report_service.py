@@ -7,11 +7,9 @@ def get_user_reports_path(user_id):
     """Возвращает путь к папке с отчетами пользователя"""
     return os.path.join("static/users", str(user_id), "reports")
 
-REPORT_CONFIG_PATH = get_user_reports_path
-
 def validate_report_config(config: Dict) -> tuple[bool, str]:
     """Проверяет конфигурацию отчета на корректность"""
-    required_fields = ['CLIENT_LOGIN', 'REPORT_NAME', 'FIELD_NAMES', 'SAVE_TO_CONNECTOR']
+    required_fields = ['REPORT_NAME', 'FIELD_NAMES', 'SAVE_TO_CONNECTOR']
 
     for field in required_fields:
         if field not in config:
@@ -19,21 +17,10 @@ def validate_report_config(config: Dict) -> tuple[bool, str]:
 
     return True, "OK"
 
-def format_json_config(config: Dict) -> str:
-    """Форматирует JSON-конфигурацию с отступами"""
-    return json.dumps(config, indent=4, ensure_ascii=False)
-
-def load_report_config(client_login: str, report_name: str, user_id: Optional[int] = None) -> Optional[Dict]:
+def load_report_config(user_id: int, report_name: str) -> Optional[Dict]:
     """Загружает конфигурацию отчета"""
-    # Убираем client_login из report_name если он там уже есть
-    clean_report_name = report_name.replace(f"{client_login}_", "")
-
-    if user_id is not None:
-        config_path = REPORT_CONFIG_PATH(user_id)
-    else:
-        config_path = "services/reports/config"
-
-    file_path = os.path.join(config_path, f"{client_login}_{clean_report_name}.json")
+    config_path = get_user_reports_path(user_id)
+    file_path = os.path.join(config_path, f"{report_name}.json")
 
     if not os.path.exists(file_path):
         return None
@@ -41,51 +28,38 @@ def load_report_config(client_login: str, report_name: str, user_id: Optional[in
     with open(file_path, 'r', encoding='utf-8') as f:
         return json.load(f)
 
-def save_report_config(user_id: int, client_login: str, report_name: str, config: Dict) -> tuple[bool, str]:
+def save_report_config(user_id: int, report_name: str, config: Dict) -> tuple[bool, str]:
     """Сохраняет конфигурацию отчета"""
     is_valid, error = validate_report_config(config)
     if not is_valid:
         return False, error
 
-    config_path = REPORT_CONFIG_PATH(user_id)
+    config_path = get_user_reports_path(user_id)
     if not os.path.exists(config_path):
         os.makedirs(config_path)
 
-    file_path = os.path.join(config_path, f"{client_login}_{report_name}.json")
-    formatted_config = format_json_config(config)
-
+    file_path = os.path.join(config_path, f"{report_name}.json")
     with open(file_path, 'w', encoding='utf-8') as f:
-        f.write(formatted_config)
+        json.dump(config, f, indent=4, ensure_ascii=False)
 
-    return True, "Report config saved successfully"
+    return True, "OK"
 
 def load_all_reports(user_id: int) -> List[Dict]:
-    """Загружает список всех отчетов"""
+    """Загружает все отчеты пользователя"""
     reports = []
+    reports_path = get_user_reports_path(user_id)
 
-    user_reports_path = os.path.join("static/users", str(user_id), "reports")
-    if not os.path.exists(user_reports_path):
-        os.makedirs(user_reports_path)
+    if not os.path.exists(reports_path):
         return reports
 
-    for filename in os.listdir(user_reports_path):
-        if filename.endswith(".json"):
-            try:
-                file_path = os.path.join(user_reports_path, filename)
-                with open(file_path, "r", encoding="utf-8") as f:
-                    report_data = json.load(f)
-                    client = report_data.get('CLIENT_LOGIN', 'unknown')
-                    display_name = report_data.get('REPORT_NAME')
-                    file_name = filename.replace(".json", "")
-
-                    reports.append({
-                        "display_name": display_name,
-                        "file_name": file_name,
-                        "client": client,
-                        "date": report_data.get("START_DATE", "Не указано"),
-                        "fields": report_data.get("FIELD_NAMES", [])
-                    })
-            except json.JSONDecodeError:
-                continue
+    for filename in os.listdir(reports_path):
+        if filename.endswith('.json'):
+            report_name = filename.replace('.json', '')
+            report_config = load_report_config(user_id, report_name)
+            if report_config:
+                reports.append({
+                    'name': report_name,
+                    'config': report_config
+                })
 
     return reports
