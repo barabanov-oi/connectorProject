@@ -48,7 +48,7 @@ def list_connectors():
         elif connector_type == "write":
             writing_connectors.append(connector_info)
 
-    reports = load_all_reports()  # ✅ Загружаем отчёты
+    reports = load_all_reports(current_user.id)  # ✅ Загружаем отчёты с учетом пользователя
     print(reports)
     return render_template('connectors/list.html',
                            reading_connectors=reading_connectors,
