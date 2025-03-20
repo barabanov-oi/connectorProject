@@ -20,11 +20,11 @@ def run_report_background(user_id, report_name):
     """Фоновый процесс для выполнения отчёта."""
     try:
         report_config = load_report_config(user_id, report_name)
-        connector_config = load_connector_config(user_id)
+        connector_config = load_connector_config("test-login", user_id)  # TODO: получать имя коннектора из конфига отчета
         token = connector_config.get("YANDEX_OAUTH_TOKEN")
 
         if not token:
-            update_report_status(client_login, report_name, "Ошибка: отсутствует OAuth-токен")
+            update_report_status(user_id, report_name, "Ошибка: отсутствует OAuth-токен")
             return
 
         field_names = report_config.get("FIELD_NAMES", [])
@@ -123,7 +123,7 @@ def edit_report(report_name=None):
         )
 
     except FileNotFoundError:
-        flash(f"❌ Ошибка: файл отчета {client_login}_{report_name}.json не найден.", "danger")
+        flash(f"❌ Ошибка: файл отчета {report_name}.json не найден.", "danger")
         return "Ошибка: файл отчета не найден", 404
 
     except Exception as e:
