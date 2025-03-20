@@ -5,7 +5,7 @@ from datetime import datetime
 
 def get_user_reports_path(user_id):
     """Возвращает путь к папке с отчетами пользователя"""
-    return os.path.join("static/users", str(user_id), "reports")
+    return os.path.join("static", "users", "reports")
 
 def validate_report_config(config: Dict) -> tuple[bool, str]:
     """Проверяет конфигурацию отчета на корректность"""
