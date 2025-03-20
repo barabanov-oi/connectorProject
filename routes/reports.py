@@ -155,3 +155,13 @@ def periodformat(value):
         return f"{start_date} - {end_date}"
     except Exception:
         return "Что-то пошло не так"  # Если что-то пошло не так, оставляем как есть
+
+@reports_bp.route('/reports/<client_login>/<report_name>/save', methods=['POST'])
+def save_report(client_login, report_name):
+    """Сохраняет JSON-конфиг отчета."""
+    try:
+        report_data = request.get_json()
+        save_report_config(client_login, report_name, report_data)
+        return jsonify({"status": "success", "message": "✅ Отчет успешно сохранен!"})
+    except Exception as e:
+        return jsonify({"status": "error", "message": f"❌ Ошибка при сохранении: {str(e)}"}), 500
