@@ -16,7 +16,7 @@
                             <button type="submit" class="btn btn-success btn-sm">🚀 Запустить</button>
                         </form>
                         <a href="{{ url_for('reports.report_queue') }}" class="btn btn-secondary btn-sm">📜 Очередь</a>
-                        <a href="{{ url_for('reports.edit_report', client_login=report.client, report_name=report.file_name) }}"
+                        <a href="{{ url_for('reports.edit_report', report_name=report.name) }}"
                                title="{{ report.display_name }}" class="btn btn-info btn-sm">📂 Открыть</a>
                     </div>
                 </li>

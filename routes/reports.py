@@ -76,12 +76,12 @@ def run_report_background(client_login, report_name):
         update_report_status(client_login, report_name, f"Ошибка: {str(e)}")
 
 
-@reports_bp.route('/reports/<client_login>/<report_name>/run', methods=['POST'])
+@reports_bp.route('/reports/<report_name>/run', methods=['GET', 'POST'])
 @login_required
-def run_report(client_login, report_name):
+def run_report(report_name):
     user_id = current_user.id
-    add_report_to_queue(client_login, report_name)
-    thread = threading.Thread(target=run_report_background, args=(client_login, report_name))
+    add_report_to_queue(user_id, report_name)
+    thread = threading.Thread(target=run_report_background, args=(user_id, report_name))
     thread.start()
     flash(f"🚀 Отчёт {report_name} запущен!", "info")
     return redirect(url_for('reports.report_queue'))
@@ -102,8 +102,11 @@ def list_reports():
     return render_template('reports/list.html', reports=reports, presets=presets)
 
 
-@reports_bp.route('/reports/<client_login>/<report_name>/edit', methods=['GET'])
-def edit_report(client_login, report_name):
+@reports_bp.route('/reports/edit', methods=['GET'])
+@reports_bp.route('/reports/<report_name>/edit', methods=['GET'])
+@login_required
+def edit_report(report_name=None):
+    user_id = current_user.id
     try:
         report_config = load_report_config(client_login, report_name)
 
