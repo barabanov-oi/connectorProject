@@ -1,4 +1,3 @@
-
 {% extends "base.html" %}
 
 {% block content %}
@@ -9,7 +8,7 @@
             {% for report in reports %}
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     <div>
-                        <strong>{{ report.name }}</strong> ({{ report.client }})
+                        <strong>{{ report.display_name }}</strong> ({{ report.client }})
                         <span class="badge bg-secondary">{{ report.date }}</span>
                     </div>
                     <div class="d-flex gap-2">
@@ -17,7 +16,8 @@
                             <button type="submit" class="btn btn-success btn-sm">🚀 Запустить</button>
                         </form>
                         <a href="{{ url_for('reports.report_queue') }}" class="btn btn-secondary btn-sm">📜 Очередь</a>
-                        <a href="{{ url_for('reports.edit_report', client_login=report.client, report_name=report.name) }}" class="btn btn-info btn-sm">📂 Открыть</a>
+                        <a href="{{ url_for('reports.edit_report', client_login=report.client, report_name=report.file_name) }}"
+                               title="{{ report.display_name }}" class="btn btn-info btn-sm">📂 Открыть</a>
                     </div>
                 </li>
             {% endfor %}
