@@ -4,9 +4,15 @@ from typing import List, Tuple, Optional
 
 def parse_dates(start_date: str, end_date: str) -> Tuple[datetime, datetime]:
     """Парсит строковые даты в datetime объекты"""
-    start = datetime.strptime(start_date, "%Y-%m-%d")
-    end = datetime.strptime(end_date, "%Y-%m-%d")
-    return start, end
+    try:
+        start = datetime.strptime(start_date, "%d-%m-%Y")
+        if end_date.lower() == "yesterday":
+            end = datetime.now() - timedelta(days=1)
+        else:
+            end = datetime.strptime(end_date, "%d-%m-%Y")
+        return start, end
+    except ValueError as e:
+        raise ValueError(f"Неверный формат даты. Используйте формат DD-MM-YYYY: {str(e)}")
 
 def get_periods(start_date: datetime, end_date: datetime, period_detail: str = "none") -> List[Tuple[str, str]]:
     """Разбивает период на части в зависимости от детализации"""
