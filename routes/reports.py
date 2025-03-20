@@ -40,7 +40,6 @@ def run_report_background(client_login, report_name):
             report_config["Periods"] = periods
         else:
             start_date, end_date = "Неизвестно", "Неизвестно"
-        # ✅ Определяем period_str раньше, чтобы он был доступен
         period_str = f"{start_date.strftime('%d-%m-%Y')} - {end_date.strftime('%d-%m-%Y')}" if start_date and end_date else "Неизвестно"
 
         df, report_lines, reports_ids = process_reports(token, field_names, report_config)
@@ -49,12 +48,10 @@ def run_report_background(client_login, report_name):
             update_report_status(client_login, report_name, "Готово (пустой отчет)", 0, f"{start_date} - {end_date}")
             return
 
-        # Сохранение в файл
         save_format = report_config.get("SAVE_FORMAT")
         if save_format in ["csv", "xlsx"]:
             save_report_to_file(df, client_login, report_name, save_format)
 
-        # Запись в Google Sheets
         save_type = report_config.get("SAVE_TYPE", "")
         result_link = "-"
 
@@ -83,7 +80,6 @@ def run_report_background(client_login, report_name):
 @login_required
 def run_report(client_login, report_name):
     user_id = current_user.id
-    """Запускает отчёт в фоне и обновляет очередь."""
     add_report_to_queue(client_login, report_name)
     thread = threading.Thread(target=run_report_background, args=(client_login, report_name))
     thread.start()
@@ -92,14 +88,12 @@ def run_report(client_login, report_name):
 
 @reports_bp.route('/reports/queue', methods=['GET'])
 def report_queue():
-    """Страница со списком запущенных отчетов."""
     queue = load_report_queue()
     return render_template('reports/queue.html', queue=queue)
 
 @reports_bp.route('/reports/', methods=['GET'])
 @login_required
 def list_reports():
-    """Загружает список всех отчётов и передаёт в шаблон."""
     from services.reports.report_service import load_all_reports
     from services.reports.report_presets import ReportPresets
 
@@ -110,16 +104,13 @@ def list_reports():
 
 @reports_bp.route('/reports/<client_login>/<report_name>/edit', methods=['GET'])
 def edit_report(client_login, report_name):
-    """Загружает JSON-конфиг отчета в HTML-редактор."""
     try:
-        # ✅ Загружаем конфигурацию отчета
-        report_config = load_report_config(client_login, report_name)
+        report_config = load_report_config(current_user.id, client_login, report_name)
 
         if not report_config:
             flash(f"❌ Ошибка: отчёт {report_name} не найден.", "danger")
             return "Ошибка: отчёт не найден", 404
 
-        # ✅ Преобразуем конфиг в JSON для отображения
         report_json = json.dumps(report_config, indent=4, ensure_ascii=False)
 
         return render_template(
@@ -138,30 +129,26 @@ def edit_report(client_login, report_name):
         return f"Ошибка: {str(e)}", 500
 
 
-# Фильтр для форматирования дат в Jinja
 def datetimeformat(value, format='%d-%m-%Y %H:%M:%S'):
     if isinstance(value, str):
         try:
-            value = datetime.strptime(value, "%Y-%m-%d %H:%M:%S")  # Преобразуем строку в дату
+            value = datetime.strptime(value, "%Y-%m-%d %H:%M:%S")
         except ValueError:
-            return value  # Если ошибка, возвращаем исходное значение
+            return value
     return value.strftime(format)
 
 
-# Фильтр для форматирования периода (ДД-ММ-ГГГГ - ДД-ММ-ГГГГ)
 def periodformat(value):
-    """Форматирует период отчёта в ДД-ММ-ГГГГ - ДД-ММ-ГГГГ"""
     try:
         start, end = value.split(" - ")
         start_date = datetime.strptime(start.split(".")[0], "%Y-%m-%d %H:%M:%S").strftime("%d-%m-%Y")
         end_date = datetime.strptime(end.split(".")[0], "%Y-%m-%d %H:%M:%S").strftime("%d-%m-%Y")
         return f"{start_date} - {end_date}"
     except Exception:
-        return "Что-то пошло не так"  # Если что-то пошло не так, оставляем как есть
+        return "Что-то пошло не так"
 
 @reports_bp.route('/reports/<client_login>/<report_name>/save', methods=['POST'])
 def save_report(client_login, report_name):
-    """Сохраняет JSON-конфиг отчета."""
     try:
         report_data = request.get_json()
         save_report_config(client_login, report_name, report_data)

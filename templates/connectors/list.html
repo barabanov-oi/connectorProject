@@ -90,7 +90,7 @@
                     {% for report in reports %}
                         <div class="report-item">
                             <div class="report-info">
-                                <div class="report-name">{{ report.name }}</div>
+                                <div class="report-name">{{ report.name or report.file_name }}</div>
                                 <div class="report-meta">
                                     <span class="client-badge">{{ report.client }}</span>
                                     <span class="date-badge">{{ report.date }}</span>
