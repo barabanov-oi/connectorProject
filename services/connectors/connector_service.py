@@ -51,13 +51,26 @@ from extensions import db
 import os
 import json
 
+def transliterate(name):
+    """Транслитерация русских букв и замена пробелов на _"""
+    ru_en = {
+        'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'yo',
+        'ж': 'zh', 'з': 'z', 'и': 'i', 'й': 'y', 'к': 'k', 'л': 'l', 'м': 'm',
+        'н': 'n', 'о': 'o', 'п': 'p', 'р': 'r', 'с': 's', 'т': 't', 'у': 'u',
+        'ф': 'f', 'х': 'h', 'ц': 'ts', 'ч': 'ch', 'ш': 'sh', 'щ': 'sch',
+        'ъ': '', 'ы': 'y', 'ь': '', 'э': 'e', 'ю': 'yu', 'я': 'ya',
+        ' ': '_', '.': '_', ',': '_'
+    }
+    return ''.join(ru_en.get(c.lower(), c) for c in name).lower()
+
 def save_connector_config(name, config_data, user_id):
     """Сохраняет конфигурацию коннектора в файл и БД."""
     # Сохраняем конфиг в файл
     config_path = "services/connectors/config"
     os.makedirs(config_path, exist_ok=True)
     
-    file_name = f"{name}.json"
+    # Транслитерация имени файла
+    file_name = f"{transliterate(name)}.json"
     file_path = os.path.join(config_path, file_name)
     
     with open(file_path, "w", encoding="utf-8") as f:
