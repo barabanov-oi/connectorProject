@@ -47,11 +47,17 @@ def run_report_background(user_id, report_name):
         else:
             period_str = "Неизвестно"
 
-        df, report_lines, reports_ids = process_reports(token, field_names, report_config)
+        df, reports_line_count, reports_ids = process_reports(token, field_names, report_config)
 
         if df.empty:
             update_report_status(user_id, report_name, "Готово (пустой отчет)", 0, period_str)
             return
+
+        # Получаем период из первого отчета в reports_line_count
+        if reports_line_count:
+            period = next(iter(reports_line_count.keys()))
+        else:
+            period = period_str
 
         save_format = report_config.get("SAVE_FORMAT")
         if save_format in ["csv", "xlsx"]:
@@ -70,12 +76,10 @@ def run_report_background(user_id, report_name):
             if sheet_id and sheet_name:
                 success = save_to_google_sheets(df, sheet_id, sheet_name, credentials_file)
                 if success:
-                    update_report_status(user_id, report_name, "Готово", df.shape[0], period_str, result_link,
-                                         reports_ids)
+                    update_report_status(user_id, report_name, "Готово", df.shape[0], period, result_link)
                 else:
                     result_link = "-"
-
-        update_report_status(user_id, report_name, "Готово", df.shape[0], period_str, result_link)
+                    update_report_status(user_id, report_name, "Готово", df.shape[0], period, result_link)
 
     except Exception as e:
         update_report_status(user_id, report_name, f"Ошибка: {str(e)}")
