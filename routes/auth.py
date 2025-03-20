@@ -19,7 +19,7 @@ def login():
             login_user(user)
             flash('Вы вошли в систему!', 'success')
             return redirect(url_for('index'))
-        flash('Неверный email или пароль.', 'danger')
+        flash('Ошибка авторизации: неверный email и/или пароль. Пожалуйста, проверьте правильность введенных данных.', 'danger')
 
     return render_template('auth/login.html', form=form)
 
